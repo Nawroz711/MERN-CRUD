@@ -4,9 +4,11 @@ const StateContext = createContext({
   currentUser: null,
   token: null,
   notification: null,
+  themeMode: 'light',
   setUser: () => {},
   setToken: () => {},
-  setNotification: () => {}
+  setNotification: () => {},
+  toggleTheme: () => {}
 })
 
 // eslint-disable-next-line react/prop-types
@@ -14,6 +16,7 @@ export const ContextProvider = ({children}) => {
   const [user, setUser] = useState({});
   const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
   const [notification, _setNotification] = useState('');
+  const [themeMode, setThemeMode] = useState(localStorage.getItem('THEME_MODE') || 'light');
 
   const setToken = (token) => {
     _setToken(token)
@@ -32,6 +35,12 @@ export const ContextProvider = ({children}) => {
     }, 5000)
   }
 
+  const toggleTheme = () => {
+    const newMode = themeMode === 'light' ? 'dark' : 'light';
+    setThemeMode(newMode);
+    localStorage.setItem('THEME_MODE', newMode);
+  }
+
   return (
     <StateContext.Provider value={{
       user,
@@ -39,7 +48,9 @@ export const ContextProvider = ({children}) => {
       token,
       setToken,
       notification,
-      setNotification
+      setNotification,
+      themeMode,
+      toggleTheme
     }}>
       {children}
     </StateContext.Provider>
